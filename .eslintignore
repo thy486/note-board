@@ -3,3 +3,4 @@ src/components.d.ts
 src/vite-env.d.ts
 src/wits/*.ts
 pkg/*
+*.cjs
