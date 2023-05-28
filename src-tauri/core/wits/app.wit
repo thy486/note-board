@@ -1,0 +1,4 @@
+interface app {
+    func greet(name: string) -> string
+    func last_greet() -> option<string>
+}
