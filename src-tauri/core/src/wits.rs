@@ -5,12 +5,12 @@ pub mod app {
     use ::tauri_bindgen_host::serde;
     use ::tauri_bindgen_host::bitflags;
     pub trait App: Sized {
-        fn greet(&mut self, name: String) -> String;
-        fn last_greet(&mut self) -> Option<String>;
+        fn greet(&self, name: String) -> String;
+        fn last_greet(&self) -> Option<String>;
     }
     pub fn add_to_router<T, U>(
         router: &mut ::tauri_bindgen_host::ipc_router_wip::Router<T>,
-        get_cx: impl Fn(&mut T) -> &mut U + Send + Sync + 'static,
+        get_cx: impl Fn(&T) -> &U + Send + Sync + 'static,
     ) -> Result<(), ::tauri_bindgen_host::ipc_router_wip::Error>
     where
         U: App + Send + Sync + 'static,
@@ -22,10 +22,10 @@ pub mod app {
                 "app",
                 "greet",
                 move |
-                    mut ctx: ::tauri_bindgen_host::ipc_router_wip::Caller<T>,
+                    ctx: ::tauri_bindgen_host::ipc_router_wip::Caller<T>,
                     name: String,
                 | -> ::tauri_bindgen_host::anyhow::Result<String> {
-                    let ctx = get_cx(ctx.data_mut());
+                    let ctx = get_cx(ctx.data());
                     Ok(ctx.greet(name))
                 },
             )?;
@@ -35,9 +35,9 @@ pub mod app {
                 "app",
                 "last_greet",
                 move |
-                    mut ctx: ::tauri_bindgen_host::ipc_router_wip::Caller<T>,
+                    ctx: ::tauri_bindgen_host::ipc_router_wip::Caller<T>,
                 | -> ::tauri_bindgen_host::anyhow::Result<Option<String>> {
-                    let ctx = get_cx(ctx.data_mut());
+                    let ctx = get_cx(ctx.data());
                     Ok(ctx.last_greet())
                 },
             )?;
