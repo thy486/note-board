@@ -1886,6 +1886,8 @@ dependencies = [
  "tauri-bindgen-gen-host",
  "tauri-bindgen-host",
  "tauri-build",
+ "tracing",
+ "tracing-subscriber",
  "wit-parser",
 ]
 
